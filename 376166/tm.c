@@ -1,216 +1,64 @@
-// /**
-//  * @file   tm.c
-//  * @author [...]
-//  *
-//  * @section LICENSE
-//  *
-//  * [...]
-//  *
-//  * @section DESCRIPTION
-//  *
-//  * Implementation of your own transaction manager.
-//  * You can completely rewrite this file (and create more files) as you wish.
-//  * Only the interface (i.e. exported symbols and semantic) must be preserved.
-// **/
-
-// // Requested features
-// #define _GNU_SOURCE
-// #define _POSIX_C_SOURCE   200809L
-// #ifdef __STDC_NO_ATOMICS__
-//     #error Current C11 compiler does not support atomic operations
-// #endif
-
-// // External headers
-
-// // Internal headers
-// #include <tm.h>
-
-// #include "macros.h"
-
-// /** Create (i.e. allocate + init) a new shared memory region, with one first non-free-able allocated segment of the requested size and alignment.
-//  * @param size  Size of the first shared segment of memory to allocate (in bytes), must be a positive multiple of the alignment
-//  * @param align Alignment (in bytes, must be a power of 2) that the shared memory region must support
-//  * @return Opaque shared memory region handle, 'invalid_shared' on failure
-// **/
-// shared_t tm_create(size_t unused(size), size_t unused(align)) {
-//     // TODO: tm_create(size_t, size_t)
-    
-//     return invalid_shared;
-// }
-
-// /** Destroy (i.e. clean-up + free) a given shared memory region.
-//  * @param shared Shared memory region to destroy, with no running transaction
-// **/
-// void tm_destroy(shared_t unused(shared)) {
-//     // TODO: tm_destroy(shared_t)
-// }
-
-// /** [thread-safe] Return the start address of the first allocated segment in the shared memory region.
-//  * @param shared Shared memory region to query
-//  * @return Start address of the first allocated segment
-// **/
-// void* tm_start(shared_t unused(shared)) {
-//     // TODO: tm_start(shared_t)
-//     return NULL;
-// }
-
-// /** [thread-safe] Return the size (in bytes) of the first allocated segment of the shared memory region.
-//  * @param shared Shared memory region to query
-//  * @return First allocated segment size
-// **/
-// size_t tm_size(shared_t unused(shared)) {
-//     // TODO: tm_size(shared_t)
-//     return 0;
-// }
-
-// /** [thread-safe] Return the alignment (in bytes) of the memory accesses on the given shared memory region.
-//  * @param shared Shared memory region to query
-//  * @return Alignment used globally
-// **/
-// size_t tm_align(shared_t unused(shared)) {
-//     // TODO: tm_align(shared_t)
-//     return 0;
-// }
-
-// /** [thread-safe] Begin a new transaction on the given shared memory region.
-//  * @param shared Shared memory region to start a transaction on
-//  * @param is_ro  Whether the transaction is read-only
-//  * @return Opaque transaction ID, 'invalid_tx' on failure
-// **/
-// tx_t tm_begin(shared_t unused(shared), bool unused(is_ro)) {
-//     // TODO: tm_begin(shared_t)
-//     return invalid_tx;
-// }
-
-// /** [thread-safe] End the given transaction.
-//  * @param shared Shared memory region associated with the transaction
-//  * @param tx     Transaction to end
-//  * @return Whether the whole transaction committed
-// **/
-// bool tm_end(shared_t unused(shared), tx_t unused(tx)) {
-//     // TODO: tm_end(shared_t, tx_t)
-//     return false;
-// }
-
-// /** [thread-safe] Read operation in the given transaction, source in the shared region and target in a private region.
-//  * @param shared Shared memory region associated with the transaction
-//  * @param tx     Transaction to use
-//  * @param source Source start address (in the shared region)
-//  * @param size   Length to copy (in bytes), must be a positive multiple of the alignment
-//  * @param target Target start address (in a private region)
-//  * @return Whether the whole transaction can continue
-// **/
-// bool tm_read(shared_t unused(shared), tx_t unused(tx), void const* unused(source), size_t unused(size), void* unused(target)) {
-//     // TODO: tm_read(shared_t, tx_t, void const*, size_t, void*)
-//     return false;
-// }
-
-// /** [thread-safe] Write operation in the given transaction, source in a private region and target in the shared region.
-//  * @param shared Shared memory region associated with the transaction
-//  * @param tx     Transaction to use
-//  * @param source Source start address (in a private region)
-//  * @param size   Length to copy (in bytes), must be a positive multiple of the alignment
-//  * @param target Target start address (in the shared region)
-//  * @return Whether the whole transaction can continue
-// **/
-// bool tm_write(shared_t unused(shared), tx_t unused(tx), void const* unused(source), size_t unused(size), void* unused(target)) {
-//     // TODO: tm_write(shared_t, tx_t, void const*, size_t, void*)
-//     return false;
-// }
-
-// /** [thread-safe] Memory allocation in the given transaction.
-//  * @param shared Shared memory region associated with the transaction
-//  * @param tx     Transaction to use
-//  * @param size   Allocation requested size (in bytes), must be a positive multiple of the alignment
-//  * @param target Pointer in private memory receiving the address of the first byte of the newly allocated, aligned segment
-//  * @return Whether the whole transaction can continue (success/nomem), or not (abort_alloc)
-// **/
-// alloc_t tm_alloc(shared_t unused(shared), tx_t unused(tx), size_t unused(size), void** unused(target)) {
-//     // TODO: tm_alloc(shared_t, tx_t, size_t, void**)
-//     return abort_alloc;
-// }
-
-// /** [thread-safe] Memory freeing in the given transaction.
-//  * @param shared Shared memory region associated with the transaction
-//  * @param tx     Transaction to use
-//  * @param target Address of the first byte of the previously allocated segment to deallocate
-//  * @return Whether the whole transaction can continue
-// **/
-// bool tm_free(shared_t unused(shared), tx_t unused(tx), void* unused(target)) {
-//     // TODO: tm_free(shared_t, tx_t, void*)
-//     return false;
-// }
-
-
-
-
-
-
-
-
 /**
  * @file   tm.c
- * @author Sébastien Rouault <sebastien.rouault@epfl.ch>
- * @author Antoine Murat <antoine.murat@epfl.ch>
+ * @author [...]
  *
  * @section LICENSE
  *
- * Copyright © 2018-2021 Sébastien Rouault.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version. Please see https://gnu.org/licenses/gpl.html
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * [...]
  *
  * @section DESCRIPTION
  *
- * Lock-based transaction manager implementation used as the reference.
+ * Implementation of your own transaction manager.
+ * You can completely rewrite this file (and create more files) as you wish.
+ * Only the interface (i.e. exported symbols and semantic) must be preserved.
 **/
 
-// Requested feature: posix_memalign
+// Requested features
+#define _GNU_SOURCE
 #define _POSIX_C_SOURCE   200809L
+#ifdef __STDC_NO_ATOMICS__
+    #error Current C11 compiler does not support atomic operations
+#endif
 
 // External headers
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
+#include <list>
+#include <set>
 
 // Internal headers
-#include <tm.h>
+#include <tm.hpp>
 
 #include "macros.h"
-#include "shared-lock.h"
 
-static const tx_t read_only_tx  = UINTPTR_MAX - 10;
-static const tx_t read_write_tx = UINTPTR_MAX - 11;
-
-/**
- * @brief List of dynamically allocated segments.
- */
-struct segment_node {
-    struct segment_node* prev;
-    struct segment_node* next;
-    // uint8_t segment[] // segment of dynamic size
-};
-typedef struct segment_node* segment_list;
 
 /**
  * @brief Simple Shared Memory Region (a.k.a Transactional Memory).
  */
 struct region {
-    struct shared_lock_t lock; // Global (coarse-grained) lock
     void* start;        // Start of the shared memory region (i.e., of the non-deallocable memory segment)
-    segment_list allocs; // Shared memory segments dynamically allocated via tm_alloc within transactions
+    Alloc allocs; // Shared memory segments dynamically allocated via tm_alloc within transactions
     size_t size;        // Size of the non-deallocable memory segment (in bytes)
     size_t align;       // Size of a word in the shared memory region (in bytes)
 };
 
+struct word {
+    size_t index;
+    bool valid; // 0: copy_A is valid, 1: copy_B is valid
+    bool accessed, written;
+    size_t copy_A, copy_B;
+};
+
+/**
+ * @brief List of dynamically allocated segments.
+ */
+std::list<region> segment_list;
+
+/** Create (i.e. allocate + init) a new shared memory region, with one first non-free-able allocated segment of the requested size and alignment.
+ * @param size  Size of the first shared segment of memory to allocate (in bytes), must be a positive multiple of the alignment
+ * @param align Alignment (in bytes, must be a power of 2) that the shared memory region must support
+ * @return Opaque shared memory region handle, 'invalid_shared' on failure
+**/
 shared_t tm_create(size_t size, size_t align) {
+    // TODO: tm_create(size_t, size_t)
     struct region* region = (struct region*) malloc(sizeof(struct region));
     if (unlikely(!region)) {
         return invalid_shared;
@@ -221,22 +69,18 @@ shared_t tm_create(size_t size, size_t align) {
         free(region);
         return invalid_shared;
     }
-    if (!shared_lock_init(&(region->lock))) {
-        free(region->start);
-        free(region);
-        return invalid_shared;
-    }
     memset(region->start, 0, size);
     region->allocs      = NULL;
-    region->size        = size;
+    region->size        = size << 1;
     region->align       = align;
     return region;
 }
 
-void tm_destroy(shared_t shared) {
-    // Note: To be compatible with any implementation, shared_t is defined as a
-    // void*. For this particular implementation, the "real" type of a shared_t
-    // is a struct region*.
+/** Destroy (i.e. clean-up + free) a given shared memory region.
+ * @param shared Shared memory region to destroy, with no running transaction
+**/
+void tm_destroy(shared_t unused(shared)) {
+    // TODO: tm_destroy(shared_t)
     struct region* region = (struct region*) shared;
     while (region->allocs) { // Free allocated segments
         segment_list tail = region->allocs->next;
@@ -244,75 +88,151 @@ void tm_destroy(shared_t shared) {
         region->allocs = tail;
     }
     free(region->start);
-    shared_lock_cleanup(&(region->lock));
     free(region);
 }
 
-// Note: In this particular implementation, tm_start returns a valid virtual
-// address (i.e., shared memory locations are virtually addressed).
-// This is NOT required. Indeed, as the content of shared memory is only ever
-// accessed via tm functions (read/write/free), you can use any naming scheme
-// you want to designate a word within the transactional memory as long as it
-// fits in a void*. Said functions will need to translate from a void* to a
-// specific word. Moreover, your naming scheme should support pointer arithmetic
-// (i.e., one should be able to pass tm_start(shared)+align*n to access the
-// (n+1)-th word within a memory region).
-// You can assume sizeof(void*) == 64b and that the maximum size ever allocated
-// will be 2^48.
+/** [thread-safe] Return the start address of the first allocated segment in the shared memory region.
+ * @param shared Shared memory region to query
+ * @return Start address of the first allocated segment
+**/
 void* tm_start(shared_t shared) {
+    // TODO: tm_start(shared_t)
     return ((struct region*) shared)->start;
+    // return NULL;
 }
 
+/** [thread-safe] Return the size (in bytes) of the first allocated segment of the shared memory region.
+ * @param shared Shared memory region to query
+ * @return First allocated segment size
+**/
 size_t tm_size(shared_t shared) {
+    // TODO: tm_size(shared_t)
+    // return 0;
     return ((struct region*) shared)->size;
 }
 
+/** [thread-safe] Return the alignment (in bytes) of the memory accesses on the given shared memory region.
+ * @param shared Shared memory region to query
+ * @return Alignment used globally
+**/
 size_t tm_align(shared_t shared) {
+    // TODO: tm_align(shared_t)
+    // return 0;
     return ((struct region*) shared)->align;
 }
 
+/** [thread-safe] Begin a new transaction on the given shared memory region.
+ * @param shared Shared memory region to start a transaction on
+ * @param is_ro  Whether the transaction is read-only
+ * @return Opaque transaction ID, 'invalid_tx' on failure
+**/
 tx_t tm_begin(shared_t shared, bool is_ro) {
-    // We let read-only transactions run in parallel by acquiring a shared
-    // access. On the other hand, read-write transactions acquire an exclusive
-    // access. At any point in time, the lock can be shared between any number
-    // of read-only transactions or held by a single read-write transaction.
+    // TODO: tm_begin(shared_t)
+    // return invalid_tx;
     if (is_ro) {
-        // Note: "unlikely" is a macro that helps branch prediction.
-        // It tells the compiler (GCC) that the condition is unlikely to be true
-        // and to optimize the code with this additional knowledge.
-        // It of course penalizes executions in which the condition turns up to
-        // be true.
-        if (unlikely(!shared_lock_acquire_shared(&(((struct region*) shared)->lock))))
-            return invalid_tx;
-        return read_only_tx;
-    } else {
-        if (unlikely(!shared_lock_acquire(&(((struct region*) shared)->lock))))
-            return invalid_tx;
-        return read_write_tx;
+        
     }
 }
 
+/** [thread-safe] End the given transaction.
+ * @param shared Shared memory region associated with the transaction
+ * @param tx     Transaction to end
+ * @return Whether the whole transaction committed
+**/
 bool tm_end(shared_t shared, tx_t tx) {
-    if (tx == read_only_tx) {
-        shared_lock_release_shared(&(((struct region*) shared)->lock));
+    // TODO: tm_end(shared_t, tx_t)
+    return false;
+}
+
+bool tm_read_word(shared_t shared, tx_t tx, void const* source, size_t size, void* target, bool is_ro) {
+    if (is_ro) {
+        // read the readable copy into target
+        memcpy(target, source->align_RO, size);
+        return true;
     } else {
-        shared_lock_release(&(((struct region*) shared)->lock));
+        if (written_set.find(tx) == written_set.end()) {
+            memcpy(target, source->align_RO, size);
+            access_set.insert(tx);
+            return true;
+        } else {
+            if (access_set.find(tx) == access_set.end()) {
+                return false;
+            } else {
+                memcpy(target, source->align_RW, size);
+                return true;
+            }
+        }
     }
-    return true;
+    return false;
 }
 
-// Note: "unused" is a macro that tells the compiler that a variable is unused.
-bool tm_read(shared_t unused(shared), tx_t unused(tx), void const* source, size_t size, void* target) {
-    memcpy(target, source, size);
-    return true;
+bool tm_write_word(shared_t shared, tx_t tx, void const* source, size_t size, void* target, bool is_ro) {
+    if (written_set.find(tx) != written_set.end()) {
+        if (access_set.find(tx) != access_set.end()) {
+            memcpy(shared->align_RW, source. size);
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (access_set.size()) return false;
+        else {
+            memcpy(shared->align_RW, source, size);
+            access_set.insert(tx);
+            written_set.insert(tx);
+            return true;
+        }
+    }
+    return false;
 }
 
-bool tm_write(shared_t unused(shared), tx_t unused(tx), void const* source, size_t size, void* target) {
-    memcpy(target, source, size);
-    return true;
+/** [thread-safe] Read operation in the given transaction, source in the shared region and target in a private region.
+ * @param shared Shared memory region associated with the transaction
+ * @param tx     Transaction to use
+ * @param source Source start address (in the shared region)
+ * @param size   Length to copy (in bytes), must be a positive multiple of the alignment
+ * @param target Target start address (in a private region)
+ * @return Whether the whole transaction can continue
+**/
+bool tm_read(shared_t shared, tx_t tx, void const* source, size_t size, void* target) {
+    // TODO: tm_read(shared_t, tx_t, void const*, size_t, void*)
+// foreach word index within [source, source + size] do
+// result = read word(word index , target + offset);
+// if result = transaction must abort then
+// return the transaction must abort;
+// end
+// end
+    for (size_t i = 0; i < count; i++)
+    {
+        /* code */
+    }
+    
+
+    return false;
 }
 
-alloc_t tm_alloc(shared_t shared, tx_t unused(tx), size_t size, void** target) {
+/** [thread-safe] Write operation in the given transaction, source in a private region and target in the shared region.
+ * @param shared Shared memory region associated with the transaction
+ * @param tx     Transaction to use
+ * @param source Source start address (in a private region)
+ * @param size   Length to copy (in bytes), must be a positive multiple of the alignment
+ * @param target Target start address (in the shared region)
+ * @return Whether the whole transaction can continue
+**/
+bool tm_write(shared_t shared, tx_t tx, void const* source, size_t size, void* target) {
+    // TODO: tm_write(shared_t, tx_t, void const*, size_t, void*)
+    return false;
+}
+
+/** [thread-safe] Memory allocation in the given transaction.
+ * @param shared Shared memory region associated with the transaction
+ * @param tx     Transaction to use
+ * @param size   Allocation requested size (in bytes), must be a positive multiple of the alignment
+ * @param target Pointer in private memory receiving the address of the first byte of the newly allocated, aligned segment
+ * @return Whether the whole transaction can continue (success/nomem), or not (abort_alloc)
+**/
+alloc_t tm_alloc(shared_t shared, tx_t tx, size_t size, void** target) {
+    // TODO: tm_alloc(shared_t, tx_t, size_t, void**)
     // We allocate the dynamic segment such that its words are correctly
     // aligned. Moreover, the alignment of the 'next' and 'prev' pointers must
     // be satisfied. Thus, we use align on max(align, struct segment_node*).
@@ -333,16 +253,16 @@ alloc_t tm_alloc(shared_t shared, tx_t unused(tx), size_t size, void** target) {
     memset(segment, 0, size);
     *target = segment;
     return success_alloc;
+    return abort_alloc;
 }
 
-bool tm_free(shared_t shared, tx_t unused(tx), void* segment) {
-    struct segment_node* sn = (struct segment_node*) ((uintptr_t) segment - sizeof(struct segment_node));
-
-    // Remove from the linked list
-    if (sn->prev) sn->prev->next = sn->next;
-    else ((struct region*) shared)->allocs = sn->next;
-    if (sn->next) sn->next->prev = sn->prev;
-
-    free(sn);
-    return true;
+/** [thread-safe] Memory freeing in the given transaction.
+ * @param shared Shared memory region associated with the transaction
+ * @param tx     Transaction to use
+ * @param target Address of the first byte of the previously allocated segment to deallocate
+ * @return Whether the whole transaction can continue
+**/
+bool tm_free(shared_t shared, tx_t tx, void* target) {
+    // TODO: tm_free(shared_t, tx_t, void*)
+    return false;
 }
