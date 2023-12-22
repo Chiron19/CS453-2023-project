@@ -1,13 +1,13 @@
 #include "dual-vers.hpp"
 
-std::atomic_int counter, remaining;
-std::atomic<bool> sleep_task{false};
-std::atomic<std::vector<pthread_t>> blocked_pthread;
+::std::atomic_int counter, remaining;
+::std::atomic<bool> sleep_task{false};
+std::vector<pthread_t> blocked_pthread;
 
 void enter_epoch() {
     pthread_t current_pthread;
     if (remaining) {
-        blocked_pthread.push(current_pthread);
+        blocked_pthread.push_back(current_pthread);
         sleep_task.wait(false);
     }
     else {
@@ -26,6 +26,6 @@ void leave_epoch() {
         blocked_pthread.clear();
     }
     else {
-        reamining = 1;
+        remaining = 1;
     }
 }

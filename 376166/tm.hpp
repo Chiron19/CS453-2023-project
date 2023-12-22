@@ -23,7 +23,9 @@
  * YOU SHOULD NOT MODIFY THIS FILE.
 **/
 
-#pragma once
+#ifndef FC5B31AE_40C6_41FE_9FD9_535B0603AD5C
+#define FC5B31AE_40C6_41FE_9FD9_535B0603AD5C
+
 
 #ifndef TM_HPP
 #define TM_HPP
@@ -86,3 +88,6 @@ bool     tm_free(shared_t shared, tx_t tx, void* addr);
 // }
 
 #endif // TM_HPP
+
+
+#endif /* FC5B31AE_40C6_41FE_9FD9_535B0603AD5C */
